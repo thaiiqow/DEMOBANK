@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DEMOBANK</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f8;--ink:#0d1224;--mut:#5b6580;--panel:#fff;--line:#d5dbea;--scr:#0b1020;--neon:#0a84ff;--glow:rgba(10,132,255,.35);--ok:#12a36b;--bad:#e5334b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070a14;--ink:#e9eeff;--mut:#8a94b3;--panel:#0f1527;--line:#212b49}}
+:root[data-theme="dark"]{--bg:#070a14;--ink:#e9eeff;--mut:#8a94b3;--panel:#0f1527;--line:#212b49}
+:root[data-accent="blue"]{--neon:#0a84ff;--glow:rgba(10,132,255,.35)}
+:root[data-accent="purple"]{--neon:#a45bff;--glow:rgba(164,91,255,.38)}
+:root[data-accent="red"]{--neon:#ff2a55;--glow:rgba(255,42,85,.36)}
+html{color-scheme:light dark}*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font:400 16px/1.45 "Exo 2",system-ui,sans-serif;
+background:linear-gradient(var(--line) 1px,transparent 1px) 0 0/36px 36px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/36px 36px,var(--bg)}
+main{max-width:480px;margin:0 auto;padding:18px 16px 96px}
+.logo{font-weight:800;font-size:22px;letter-spacing:.14em;color:var(--neon);text-shadow:0 0 14px var(--glow)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.top small{color:var(--mut)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.card{border-radius:18px;padding:20px;height:196px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;margin-bottom:14px;
+background:linear-gradient(135deg,#0a0f22 0%,#141c3d 60%,var(--neon) 160%);border:1px solid var(--neon);box-shadow:0 0 28px var(--glow),inset 0 0 30px rgba(255,255,255,.04)}
+.card.frozen{filter:grayscale(1) brightness(.7);box-shadow:none}
+.chip{width:40px;height:30px;border-radius:6px;border:1px solid var(--neon);background:linear-gradient(135deg,transparent 45%,var(--neon) 46% 54%,transparent 55%)}
+.cr{display:flex;justify-content:space-between;align-items:center}
+.num{font-size:20px;letter-spacing:.14em;font-variant-numeric:tabular-nums}
+.bal{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;text-shadow:0 0 18px var(--glow)}
+.mut{color:var(--mut);font-size:13px}
+label{display:block;font-size:13px;color:var(--mut);margin:0 0 4px}
+input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:500 16px "Exo 2",sans-serif;margin-bottom:12px}
+input:focus{outline:none;border-color:var(--neon);box-shadow:0 0 0 3px var(--glow)}
+.btn{width:100%;padding:13px;border:1px solid var(--neon);border-radius:12px;background:transparent;color:var(--neon);font:700 15px "Exo 2",sans-serif;box-shadow:0 0 14px var(--glow)}
+.btn.fill{background:var(--neon);color:#fff}
+.btn.sm{width:auto;padding:8px 14px;font-size:13px}
+.btn:focus-visible,.nav button:focus-visible,.key:focus-visible,.chip-b:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--panel);border-top:1px solid var(--line)}
+.nav button{flex:1;max-width:96px;padding:8px 2px;border:0;border-radius:10px;background:transparent;color:var(--mut);font:600 12px "Exo 2",sans-serif}
+.nav button[aria-selected=true]{color:var(--neon);background:var(--glow)}
+.scr{background:var(--scr);color:#7dffc0;border-radius:10px;padding:14px;min-height:96px;font:500 15px/1.5 ui-monospace,Menlo,monospace;margin-bottom:12px;white-space:pre-line;box-shadow:inset 0 0 18px rgba(0,255,150,.12)}
+  .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.key{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:600 18px "Exo 2",sans-serif}
+.h{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.h:last-child{border:0}.h small{display:block;color:var(--mut)}
+.minus{color:var(--bad)}.plus{color:var(--ok)}.fail{color:var(--mut);text-decoration:line-through}
+.sw{display:flex;gap:10px;margin:6px 0 16px}
+.chip-b{flex:1;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:600 14px "Exo 2",sans-serif}
+.chip-b[aria-pressed=true]{border-color:var(--neon);box-shadow:0 0 12px var(--glow);color:var(--neon)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.bar{height:8px;border-radius:8px;background:var(--line);overflow:hidden;margin:8px 0 12px}
+.bar i{display:block;height:100%;background:var(--neon);box-shadow:0 0 10px var(--glow)}
+.msg{min-height:20px;font-size:13px;color:var(--mut);margin-top:8px}
+h2{font-size:17px;margin:0 0 12px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav class="nav" id="nav" hidden></nav>
+<script>
+(function(){
+var DEVMAIL="afb09daafa040d76c51eca80c562d12a7a97c46d46c54db076b71719bc05e2b8",
+    DEVHASH="042346456df0b9f2d7063f06996f3cfa177b3eb833b11e149a9be3c9588ed8a6",SALT="demobank:";
+var DB={users:{},session:null,theme:null,accent:"blue"},idb=null,tab="home",mode="in",pin="",pay=0,posText="Введите сумму",posStage=1,msg="";
+/* база данных браузера (IndexedDB): переживает перезагрузку и закрытие вкладки */
+function load(){return new Promise(function(done){
+  try{var r=indexedDB.open("demobank",1);
+    r.onupgradeneeded=function(){r.result.createObjectStore("kv")};
+    r.onerror=function(){done()};
+    r.onsuccess=function(){idb=r.result;
+      var q=idb.transaction("kv").objectStore("kv").get("db");
+      q.onsuccess=function(){if(q.result)DB=q.result;done()};q.onerror=function(){done()}}
+  }catch(e){done()}})}
+function save(){if(!idb)return;try{idb.transaction("kv","readwrite").objectStore("kv").put(DB,"db")}catch(e){}}
+function sha(t){return crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")})}
+function esc(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML}
+function rub(k){return (k/100).toLocaleString("ru-RU",{minimumFractionDigits:2,maximumFractionDigits:2})+" ₽"}
+function $(i){return document.getElementById(i)}
+function me(){return DB.users[DB.session]}
+function applyTheme(){
+  var r=document.documentElement,t=DB.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  r.setAttribute("data-theme",t);r.setAttribute("data-accent",DB.accent||"blue");
+}
+function add(u,title,amt,ok){u.hist.unshift({t:title,a:amt,ok:ok,d:new Date().toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})});if(u.hist.length>60)u.hist.pop()}
+function newUser(name,hash,dev){
+  var n="2200 "+[1,2,3].map(function(){return String(Math.floor(1000+Math.random()*9000))}).join(" ");
+  return {name:name,hash:hash,bal:dev?100000000:5000000,saved:0,goal:3000000,frozen:false,card:n,cvv:String(Math.floor(100+Math.random()*900)),pin:"1234",dev:!!dev,hist:[]};
+}
+
+/* ---------- auth ---------- */
+function authView(){
+  $("nav").hidden=true;
+  $("app").innerHTML='<div class="top"><div class="logo">DEMOBANK</div></div><div class="panel"><h2>'+(mode==="in"?"Вход":"Новый аккаунт")+'</h2>'
+  +(mode==="up"?'<label for="nm">Имя</label><input id="nm" autocomplete="name">':'')
+  +'<label for="em">Email</label><input id="em" type="email" autocomplete="email"><label for="pw">Пароль</label><input id="pw" type="password" autocomplete="'+(mode==="in"?"current-password":"new-password")+'">'
+  +'<button class="btn fill" id="ok">'+(mode==="in"?"Войти":"Создать аккаунт")+'</button><div class="msg" id="am" aria-live="polite">'+esc(msg)+'</div>'
+  +'<button class="btn sm" id="sw" style="margin-top:6px">'+(mode==="in"?"Создать аккаунт":"Уже есть аккаунт")+'</button></div><p class="mut">Учебный банк. Деньги ненастоящие, данные хранятся только в этом браузере.</p>';
+  $("sw").onclick=function(){mode=mode==="in"?"up":"in";msg="";authView()};
+  $("ok").onclick=function(){
+    var em=$("em").value.trim().toLowerCase(),pw=$("pw").value,nm=mode==="up"?$("nm").value.trim():"";
+    if(!em||!pw){msg="Заполните email и пароль";return authView()}
+    if(mode==="up"&&(!nm||pw.length<6)){msg="Нужно имя и пароль от 6 символов";return authView()}
+    sha(SALT+em).then(function(eh){return sha(SALT+em+":"+pw).then(function(ph){
+      if(mode==="in"){
+        if(eh===DEVMAIL&&ph===DEVHASH){if(!DB.users[em])DB.users[em]=newUser("Developer",ph,true);DB.session=em;save();return home()}
+        var u=DB.users[em];
+        if(!u||u.hash!==ph){msg="Неверный email или пароль";return authView()}
+        DB.session=em;save();home();
+      }else{
+        if(eh===DEVMAIL||DB.users[em]){msg="Этот email уже занят";return authView()}
+        DB.users[em]=newUser(nm,ph,false);DB.session=em;save();home();
+      }
+    })});
+  };
+}
+function home(){tab="home";msg="";posStage=1;posText="Введите сумму";view()}
+
+/* ---------- main views ---------- */
+function view(){
+  var u=me();if(!u)return authView();
+  var tabs=[["home","Главная"],["pos","Терминал"],["tr","Перевод"],["hist","История"],["set","Профиль"]];
+  if(u.dev)tabs.push(["dev","Dev"]);
+  var nav=$("nav");nav.hidden=false;
+  nav.innerHTML=tabs.map(function(t){return '<button data-t="'+t[0]+'" aria-selected="'+(tab===t[0])+'">'+t[1]+'</button>'}).join("");
+  nav.querySelectorAll("button").forEach(function(b){b.onclick=function(){tab=b.dataset.t;msg="";if(tab==="pos"){posStage=1;posText="Введите сумму"}view()}});
+  var h='<div class="top"><div class="logo">DEMOBANK</div><small>'+esc(u.name)+'</small></div>';
+  $("app").innerHTML=h+({home:vHome,pos:vPos,tr:vTr,hist:vHist,set:vSet,dev:vDev}[tab])(u);
+  bind(u);
+}
+function vHome(u){
+  var p=Math.min(100,Math.round(u.saved/u.goal*100));
+  return '<div class="card'+(u.frozen?' frozen':'')+'" id="card" role="button" tabindex="0" aria-label="Карта"><div class="cr"><div class="chip"></div><b>'+(u.frozen?'ЗАМОРОЖЕНА':'MIR')+'</b></div><div class="num">'+u.card+'</div><div class="cr"><span>'+esc(u.name).toUpperCase()+'</span><span id="cv">12/30 · CVV ***</span></div></div>'
+  +'<div class="mut">Баланс</div><div class="bal">'+rub(u.bal)+'</div><div class="mut" style="margin-bottom:14px">Нажми на карту, чтобы показать CVV</div>'
+  +'<div class="panel"><h2>Копилка</h2><div class="mut">Цель: '+rub(u.goal)+'</div><div class="bar"><i style="width:'+p+'%"></i></div><div class="mut" style="margin-bottom:10px">Накоплено '+rub(u.saved)+' ('+p+'%)</div>'
+  +'<label for="sv">Сумма, ₽</label><input id="sv" type="number" min="1" value="1000" inputmode="decimal"><div style="display:flex;gap:8px"><button class="btn" id="sin">Отложить</button><button class="btn" id="sout">Вернуть</button></div><div class="msg" id="m" aria-live="polite">'+esc(msg)+'</div></div>'
+  +'<div class="panel"><h2>Карта</h2><button class="btn" id="fr">'+(u.frozen?'Разморозить карту':'Заморозить карту')+'</button><div class="mut" style="margin-top:8px">Кешбэк 1% с каждой покупки на терминале.</div></div>';
+}
+function vPos(u){
+  var body=posStage===1?'<label for="amt">Сумма покупки, ₽</label><input id="amt" type="number" min="1" value="1290" inputmode="decimal"><button class="btn fill" id="go">Выставить счёт</button>'
+   :posStage===2?'<button class="btn fill" id="tap">Приложить карту</button>':'<div class="keys" id="keys"></div>';
+  return '<div class="panel"><h2>Эмулятор терминала</h2><div class="scr" id="scr">'+esc(posText)+'</div>'+body+'<div class="mut" style="margin-top:10px">PIN нового аккаунта: 1234</div></div>';
+}
+function vTr(u){return '<div class="panel"><h2>Перевод клиенту DEMOBANK</h2><label for="to">Email получателя</label><input id="to" type="email"><label for="ta">Сумма, ₽</label><input id="ta" type="number" min="1" value="500" inputmode="decimal"><button class="btn fill" id="send">Перевести</button><div class="msg" id="m" aria-live="polite">'+esc(msg)+'</div><div class="mut">Чтобы проверить, создай второй аккаунт в другой вкладке или после выхода.</div></div>'}
+function vHist(u){
+  return '<div class="panel"><h2>История</h2>'+(u.hist.length?u.hist.map(function(h){var c=h.ok?(h.a<0?"minus":"plus"):"fail";return '<div class="h"><div>'+esc(h.t)+'<small>'+h.d+(h.ok?'':' · отклонено')+'</small></div><div class="'+c+'">'+(h.a>0?"+":"")+rub(h.a)+'</div></div>'}).join(""):'<div class="mut">Операций нет. Оплати что-нибудь на терминале.</div>')+'</div>';
+}
+function vSet(u){
+  var ac=[["blue","Синий","#0a84ff"],["purple","Фиолет","#a45bff"],["red","Красный","#ff2a55"]],th=document.documentElement.getAttribute("data-theme");
+  return '<div class="panel"><h2>Тема</h2><div class="sw">'+["light","dark"].map(function(t){return '<button class="chip-b" data-th="'+t+'" aria-pressed="'+(th===t)+'">'+(t==="light"?"Светлая":"Тёмная")+'</button>'}).join("")+'</div>'
+  +'<h2>Неоновый акцент</h2><div class="sw">'+ac.map(function(a){return '<button class="chip-b" data-ac="'+a[0]+'" aria-pressed="'+(DB.accent===a[0])+'"><span class="dot" style="background:'+a[2]+';box-shadow:0 0 8px '+a[2]+'"></span>'+a[1]+'</button>'}).join("")+'</div>'
+  +'<button class="btn" id="out">Выйти</button></div>';
+}
+function vDev(u){
+  var us=Object.keys(DB.users).map(function(e){return '<div class="h"><div>'+esc(DB.users[e].name)+'<small>'+esc(e)+'</small></div><div>'+rub(DB.users[e].bal)+'</div></div>'}).join("");
+  return '<div class="panel"><h2>Панель разработчика</h2><label for="dm">Пополнить мой счёт, ₽</label><input id="dm" type="number" value="10000" inputmode="decimal"><button class="btn fill" id="dtop">Пополнить</button><div class="msg" id="m" aria-live="polite">'+esc(msg)+'</div></div>'
+  +'<div class="panel"><h2>Все аккаунты ('+Object.keys(DB.users).length+')</h2>'+us+'</div><div class="panel"><button class="btn" id="wipe">Удалить все данные приложения</button></div>';
+}
+
+/* ---------- actions ---------- */
+function bind(u){
+  var on=function(i,f){var e=$(i);if(e)e.onclick=f};
+  var card=$("card");if(card){var open=false,t=function(){open=!open;$("cv").textContent="12/30 · CVV "+(open?u.cvv:"***")};card.onclick=t;card.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();t()}}}
+  function k(){return Math.round(parseFloat($("sv")?$("sv").value:0)*100)}
+  on("sin",function(){var a=k();if(!(a>0))return;if(a>u.bal){msg="Недостаточно средств";return view()}u.bal-=a;u.saved+=a;add(u,"В копилку",-a,true);save();msg="Отложено "+rub(a);view()});
+  on("sout",function(){var a=k();if(!(a>0))return;if(a>u.saved){msg="В копилке меньше";return view()}u.bal+=a;u.saved-=a;add(u,"Из копилки",a,true);save();msg="Возвращено "+rub(a);view()});
+  on("fr",function(){u.frozen=!u.frozen;save();view()});
+  on("go",function(){var a=Math.round(parseFloat($("amt").value)*100);if(!(a>0)){$("scr").textContent="Ошибка: введите сумму больше нуля";return}pay=a;posStage=2;posText="К оплате: "+rub(a)+"\n\nПриложите карту";view()});
+  on("tap",function(){
+    if(u.frozen){posStage=1;posText="ОТКАЗ\nКарта заморожена";add(u,"Магазин «Звезда»",-pay,false);save();return view()}
+    pin="";posStage=3;posText="Карта прочитана\nВведите PIN-код:\n";view();
+  });
+  var keys=$("keys");
+  if(keys)["1","2","3","4","5","6","7","8","9","Сброс","0","OK"].forEach(function(c){
+    var b=document.createElement("button");b.className="key";b.textContent=c;
+    b.onclick=function(){
+      if(c==="OK")return fin(u);
+      if(c==="Сброс")pin="";else if(pin.length<4)pin+=c;
+      $("scr").textContent="Карта прочитана\nВведите PIN-код:\n"+"●".repeat(pin.length);
+    };keys.appendChild(b);
+  });
+  on("send",function(){
+    var to=$("to").value.trim().toLowerCase(),a=Math.round(parseFloat($("ta").value)*100),r=DB.users[to];
+    if(!r||to===DB.session){msg="Получатель не найден";return view()}
+    if(!(a>0)){msg="Введите сумму больше нуля";return view()}
+    if(a>u.bal){add(u,"Перевод "+r.name,-a,false);save();msg="Недостаточно средств";return view()}
+    u.bal-=a;r.bal+=a;add(u,"Перевод "+r.name,-a,true);add(r,"Перевод от "+u.name,a,true);save();msg="Переведено "+rub(a);view();
+  });
+  document.querySelectorAll("[data-th]").forEach(function(b){b.onclick=function(){DB.theme=b.dataset.th;save();applyTheme();view()}});
+  document.querySelectorAll("[data-ac]").forEach(function(b){b.onclick=function(){DB.accent=b.dataset.ac;save();applyTheme();view()}});
+  on("out",function(){DB.session=null;save();authView()});
+  on("dtop",function(){var a=Math.round(parseFloat($("dm").value)*100);if(!(a>0))return;u.bal+=a;add(u,"Пополнение (dev)",a,true);save();msg="Зачислено "+rub(a);view()});
+  on("wipe",function(){DB.users={};DB.session=null;save();authView()});
+}
+function fin(u){
+  var name="Магазин «Звезда»";posStage=1;
+  if(pin!==u.pin){add(u,name,-pay,false);posText="ОТКАЗ\nНеверный PIN-код"}
+  else if(pay>u.bal){add(u,name,-pay,false);posText="ОТКАЗ\nНедостаточно средств"}
+  else{var cb=Math.floor(pay/100);u.bal-=pay;u.bal+=cb;add(u,name,-pay,true);if(cb)add(u,"Кешбэк 1%",cb,true);posText="ОДОБРЕНО\nСписано: "+rub(pay)+"\nКешбэк: "+rub(cb)+"\nЧек №"+Math.floor(100000+Math.random()*900000)}
+  save();view();
+}
+load().then(function(){applyTheme();if(me())home();else authView()});
+})();
+</script>
+</body>
+</html>
