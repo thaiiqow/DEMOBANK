@@ -150,6 +150,9 @@ const button=$("submit");
 let timeoutId;
 try{
  const request=mode==="in"
+console.log("Supabase client:", !!db);
+console.log("Supabase library:", typeof window.supabase);
+console.log("Supabase URL:", SUPABASE_URL);
  ?db.auth.signInWithPassword({email,password})
  :db.auth.signUp({
  email,
