@@ -149,16 +149,13 @@ const button=$("submit");
  button.textContent="Подключение к серверу…";
 let timeoutId;
 try{
- const request=mode==="in"
-console.log("Supabase client:", !!db);
-console.log("Supabase library:", typeof window.supabase);
-console.log("Supabase URL:", SUPABASE_URL);
- ?db.auth.signInWithPassword({email,password})
- :db.auth.signUp({
- email,
- password,
- options:{data:{name}}
- });
+const request = mode === "in"
+  ? db.auth.signInWithPassword({ email, password })
+  : db.auth.signUp({
+      email,
+      password,
+      options: { data: { name } }
+    });
 const timeout=new Promise((_,reject)=>{
   timeoutId=setTimeout(
     ()=>reject(new Error("Тайм-аут: Supabase не ответил за 15 секунд. Проверь подключение и настройки проекта.")),
