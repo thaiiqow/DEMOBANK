@@ -171,7 +171,7 @@ if(URL_.indexOf("PASTE")===0){setupView();return}
 // Замените URL и ваш актуальный ключ (JWT-токен начинающийся с eyJ...) в кавычках:
 sb = supabase.createClient(
   "https://nfocubudqyedugnbzxmj.supabase.co",
-  "sb_publishable_mgZTW_o8NcYqyYAKh2Qjqw_xOX9xIEW"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mb2N1YnVkcXllZHVnbmJ6eG1qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NzQzMTcsImV4cCI6MjEwODU1MDMxN30.rzpeqGS_0Txu8w53SomlHq6tOuodul22yfYrAQIoJz0"
 );
 
 sb.auth.getSession().then(function(r){r.data.session?boot():authView()});
