@@ -131,27 +131,62 @@ function authScreen(){
 
   $("switch").onclick=()=>{mode=mode==="in"?"up":"in";message="";authScreen()};
   $("submit").onclick=async()=>{
-    const email=$("email").value.trim();
-    const password=$("password").value;
-    const name=mode==="up"?$("name").value.trim():"";
-    if(!email||!password){message="Заполните email и пароль";return authScreen()}
-    if(mode==="up"&&(!name||password.length<6)){message="Введите имя и пароль минимум из 6 символов";return authScreen()}
-    $("submit").disabled=true;
-    try{
-      let r;
-      if(mode==="in"){
-        r=await db.auth.signInWithPassword({email,password});
-      }else{
-        r=await db.auth.signUp({email,password,options:{data:{name}}});
-      }
-      if(r.error)throw r.error;
-      if(mode==="up"&&!r.data.session){
-        mode="in";message="Аккаунт создан. Подтвердите email по ссылке из письма.";
-        return authScreen();
-      }
-      await loadApp();
-    }catch(e){message=errorText(e);authScreen()}
-  };
+ const email=$(“email”).value.trim();
+ const password=$(“password”).value;
+ const name=mode===“up”?$(“name”).value.trim():””;
+if(!email||!password){
+ message=“Заполните email и пароль”;
+ authScreen();
+ return;
+ }
+if(mode===“up”&&(!name||password.length<6)){
+ message=“Введите имя и пароль минимум из 6 символов”;
+ authScreen();
+ return;
+ }
+const button=$(“submit”);
+ button.disabled=true;
+ button.textContent=“Подключение к серверу…”;
+let timeoutId;
+try{
+ const request=mode===“in”
+ ?db.auth.signInWithPassword({email,password})
+ :db.auth.signUp({
+ email,
+ password,
+ options:{data:{name}}
+ });
+const timeout=new Promise((_,reject)=>{
+  timeoutId=setTimeout(
+    ()=>reject(new Error("Тайм-аут: Supabase не ответил за 15 секунд. Проверь подключение и настройки проекта.")),
+    15000
+  );
+});
+
+const r=await Promise.race([request,timeout]);
+
+if(r.error)throw r.error;
+
+if(mode==="up"&&!r.data.session){
+  mode="in";
+  message="Аккаунт создан. Если подтверждение email включено, проверь почту.";
+  authScreen();
+  return;
+}
+
+await loadApp();
+}catch(e){
+ message=errorText(e);
+ if(/тайм-аут/i.test(e?.message||””)){
+ message=e.message;
+ }
+ authScreen();
+ }finally{
+ clearTimeout(timeoutId);
+ const currentButton=$(“submit”);
+ if(currentButton)currentButton.disabled=false;
+ }
+ };
 }
 
 async function loadApp(){
