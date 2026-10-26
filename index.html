@@ -344,15 +344,40 @@ function bind(){
   });
 }
 
+
 async function start(){
-  if(!window.supabase){app.innerHTML='<section class="panel"><h2>Не удалось загрузить Supabase</h2><p>Проверь подключение к интернету.</p></section>';return}
-  db=window.supabase.createClient("https://nfocubudqyedugnbzxmj.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mb2N1YnVkdXllZHVnbmJ6eG1qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NzQzMTcsImV4cCI6MjEwODU1MDMxN30.rzpeqGS_0Txu8w53SomlHq6tOuodul22yfYrAQIoJz0");
-  try{
-    const r=await db.auth.getSession();
-    if(r.error)throw r.error;
-    if(r.data.session)await loadApp();
-    else authScreen();
-  }catch(e){message=errorText(e);authScreen()}
+  app.innerHTML = '<section class="panel"><h2>Проверка подключения</h2><p id="check">Проверяем библиотеку Supabase...</p></section>';
+
+  try {
+    if (!window.supabase) {
+      $("check").textContent = "ОШИБКА: библиотека Supabase не загрузилась.";
+      return;
+    }
+
+    $("check").textContent = "Библиотека загружена. Создаём подключение...";
+
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    $("check").textContent = "Подключение создано. Проверяем сессию...";
+
+    const result = await Promise.race([
+      db.auth.getSession(),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Тайм-аут при проверке сессии")), 10000)
+      )
+    ]);
+
+    if (result.error) throw result.error;
+
+    if (result.data.session) {
+      await loadApp();
+    } else {
+      authScreen();
+    }
+  } catch (e) {
+    app.innerHTML = '<section class="panel"><h2>Ошибка запуска</h2><p id="error"></p></section>';
+    $("error").textContent = e.message || String(e);
+  }
 }
 start();
 })();
