@@ -127,29 +127,29 @@ function authScreen(){
     <div class="msg">${esc(message)}</div>
     <button class="btn" id="switch" style="margin-top:10px">${mode==="in"?"Создать аккаунт":"Уже есть аккаунт"}</button>
   </section>
-  <p class="mut">Учебный банк. Деньги ненастоящие.</p>`;
+  <p class="mut">DEMOBANK | 2026.</p>`;
 
   $("switch").onclick=()=>{mode=mode==="in"?"up":"in";message="";authScreen()};
   $("submit").onclick=async()=>{
- const email=$(“email”).value.trim();
- const password=$(“password”).value;
- const name=mode===“up”?$(“name”).value.trim():””;
+ const email=$("email").value.trim();
+ const password=$("password").value;
+ const name=mode==="up"?$("name").value.trim():"";
 if(!email||!password){
- message=“Заполните email и пароль”;
+ message="Заполните email и пароль";
  authScreen();
  return;
  }
-if(mode===“up”&&(!name||password.length<6)){
- message=“Введите имя и пароль минимум из 6 символов”;
+if(mode==="up"&&(!name||password.length<6)){
+ message="Введите имя и пароль минимум из 6 символов";
  authScreen();
  return;
  }
-const button=$(“submit”);
+const button=$("submit");
  button.disabled=true;
- button.textContent=“Подключение к серверу…”;
+ button.textContent="Подключение к серверу…";
 let timeoutId;
 try{
- const request=mode===“in”
+ const request=mode==="in"
  ?db.auth.signInWithPassword({email,password})
  :db.auth.signUp({
  email,
@@ -177,13 +177,13 @@ if(mode==="up"&&!r.data.session){
 await loadApp();
 }catch(e){
  message=errorText(e);
- if(/тайм-аут/i.test(e?.message||””)){
+ if(/тайм-аут/i.test(e?.message||"")){
  message=e.message;
  }
  authScreen();
  }finally{
  clearTimeout(timeoutId);
- const currentButton=$(“submit”);
+ const currentButton=$("submit");
  if(currentButton)currentButton.disabled=false;
  }
  };
