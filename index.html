@@ -343,7 +343,7 @@ function bind(){
 
 async function start(){
   if(!window.supabase){app.innerHTML='<section class="panel"><h2>Не удалось загрузить Supabase</h2><p>Проверь подключение к интернету.</p></section>';return}
-  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  db=window.supabase.createClient("https://nfocubudqyedugnbzxmj.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mb2N1YnVkdXllZHVnbmJ6eG1qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NzQzMTcsImV4cCI6MjEwODU1MDMxN30.rzpeqGS_0Txu8w53SomlHq6tOuodul22yfYrAQIoJz0");
   try{
     const r=await db.auth.getSession();
     if(r.error)throw r.error;
