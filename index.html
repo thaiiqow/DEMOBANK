@@ -167,8 +167,15 @@ function bind(){
 
 applyTheme();
 if(URL_.indexOf("PASTE")===0){setupView();return}
-sb=supabase.createClient(https://nfocubudqyedugnbzxmj.supabase.co,sb_publishable_mgZTW_o8NcYqyYAKh2Qjqw_xOX9xIEW);
+
+// Замените URL и ваш актуальный ключ (JWT-токен начинающийся с eyJ...) в кавычках:
+sb = supabase.createClient(
+  "https://nfocubudqyedugnbzxmj.supabase.co",
+  "sb_publishable_mgZTW_o8NcYqyYAKh2Qjqw_xOX9xIEW"
+);
+
 sb.auth.getSession().then(function(r){r.data.session?boot():authView()});
+
 })();
 </script>
 </body>
